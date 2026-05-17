@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SQL Mastery Roadmap — E-Commerce Platform Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0d1117;
+    --surface:  #161b22;
+    --surface2: #1e2530;
+    --border:   #30363d;
+    --border2:  #404752;
+    --text:     #e6edf3;
+    --muted:    #7d8590;
+    --accent1:  #58a6ff;
+    --accent2:  #3fb950;
+    --accent3:  #d29922;
+    --accent4:  #bc8cff;
+    --danger:   #f85149;
+    --p1:       #58a6ff;
+    --p2:       #3fb950;
+    --p3:       #bc8cff;
+    --radius:   10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .noise {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  header { margin-bottom: 2.5rem; }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #1a2332; border: 1px solid #1f3050;
+    color: var(--accent1); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 1rem; letter-spacing: 0.05em;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  h1 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 700;
+    line-height: 1.2; color: var(--text);
+    margin-bottom: .5rem;
+  }
+  h1 span { color: var(--accent1); }
+  .subtitle { color: var(--muted); font-size: 13px; font-weight: 300; }
+
+  /* ── GLOBAL STATS ── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1rem 1.2rem;
+    transition: border-color .2s;
+  }
+  .stat-card:hover { border-color: var(--border2); }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .4rem; font-family: 'JetBrains Mono', monospace; }
+  .stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+  .stat-value.blue  { color: var(--p1); }
+  .stat-value.green { color: var(--p2); }
+  .stat-value.purple{ color: var(--p3); }
+  .stat-value.amber { color: var(--accent3); }
+
+  /* ── MASTER PROGRESS ── */
+  .master-progress { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem 1.6rem; margin-bottom: 2rem; }
+  .mp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+  .mp-title { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+  .mp-pct { font-size: 13px; font-weight: 700; color: var(--accent2); font-family: 'JetBrains Mono', monospace; }
+  .progress-track {
+    height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--p1), var(--p2));
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .phase-bars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .mini-bar-wrap { }
+  .mini-bar-label { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .mini-track { height: 4px; background: var(--surface2); border-radius: 2px; overflow: hidden; }
+  .mini-fill { height: 100%; border-radius: 2px; transition: width .6s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .mini-fill.p1 { background: var(--p1); }
+  .mini-fill.p2 { background: var(--p2); }
+  .mini-fill.p3 { background: var(--p3); }
+
+  /* ── PHASE SECTIONS ── */
+  .phase-section { margin-bottom: 2rem; }
+  .phase-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 1rem 1.4rem; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border: 1px solid var(--border); border-bottom: none;
+    cursor: pointer; user-select: none;
+    transition: background .15s;
+  }
+  .phase-header:hover { background: rgba(255,255,255,.03); }
+  .phase-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 3px 10px; border-radius: 20px; font-weight: 600;
+    letter-spacing: .06em;
+  }
+  .p1-badge { background: #0d2240; color: var(--p1); border: 1px solid #1a3a60; }
+  .p2-badge { background: #0d2218; color: var(--p2); border: 1px solid #1a3a28; }
+  .p3-badge { background: #1e1230; color: var(--p3); border: 1px solid #3a2060; }
+
+  .phase-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .phase-meta { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .phase-toggle { color: var(--muted); font-size: 18px; transition: transform .25s; }
+  .phase-header.collapsed .phase-toggle { transform: rotate(-90deg); }
+  .phase-header[data-phase="1"] { background: #0b1624; }
+  .phase-header[data-phase="2"] { background: #0b1f14; }
+  .phase-header[data-phase="3"] { background: #130e20; }
+
+  /* ── DAY CARDS ── */
+  .days-grid {
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    overflow: hidden;
+  }
+  .day-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 1.4rem;
+    border-bottom: 1px solid var(--border);
+    transition: background .15s; cursor: pointer;
+    background: var(--surface);
+  }
+  .day-row:last-child { border-bottom: none; }
+  .day-row:hover { background: var(--surface2); }
+  .day-row.done { background: var(--surface); }
+  .day-row.done .day-title { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border2); }
+  .day-row.done .day-topic { color: var(--border2); }
+
+  .checkbox {
+    width: 18px; height: 18px; border-radius: 5px;
+    border: 1.5px solid var(--border2); flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s; pointer-events: none;
+  }
+  .day-row.done .checkbox {
+    background: var(--accent2); border-color: var(--accent2);
+  }
+  .checkmark { display: none; color: #0d1117; font-size: 11px; font-weight: 700; }
+  .day-row.done .checkmark { display: block; }
+
+  .day-info { flex: 1; min-width: 0; }
+  .day-number { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 2px; letter-spacing: .06em; }
+  .day-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; color: var(--text); }
+  .day-topic { font-size: 12px; color: var(--muted); font-style: italic; }
+
+  .day-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tag-ddl    { background: #1a1f2e; color: #7cacf8; border: 1px solid #2a3550; }
+  .tag-dml    { background: #1e2018; color: #9dcc6b; border: 1px solid #3a4020; }
+  .tag-query  { background: #221e14; color: #d4a72c; border: 1px solid #4a3820; }
+  .tag-design { background: #201630; color: #c4a0f0; border: 1px solid #402860; }
+  .tag-perf   { background: #201515; color: #e88080; border: 1px solid #4a2020; }
+  .tag-cap    { background: #1a201a; color: #60b870; border: 1px solid #2a4030; }
+
+  /* ── CURRENT DAY BANNER ── */
+  .current-banner {
+    background: #0d1f35; border: 1px solid #1a3860;
+    border-radius: var(--radius); padding: 1rem 1.4rem;
+    margin-bottom: 2rem; display: flex; align-items: center; gap: 14px;
+  }
+  .current-icon { font-size: 1.4rem; }
+  .current-label { font-size: 11px; color: var(--accent1); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 3px; }
+  .current-day-title { font-size: 14px; font-weight: 600; color: var(--text); }
+  .current-phase-tag { margin-left: auto; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted);
+  }
+  .footer-sig { display: flex; gap: 6px; align-items: center; }
+  .git-tag { color: var(--accent2); }
+
+  /* ── ANIMATIONS ── */
+  .phase-section { animation: fadeUp .4s ease both; }
+  .phase-section:nth-child(2) { animation-delay: .05s; }
+  .phase-section:nth-child(3) { animation-delay: .1s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .days-grid.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-badge"><span class="dot"></span> LIVE TRACKER — PostgreSQL</div>
+    <h1>E-Commerce SQL <span>Mastery</span><br>Roadmap</h1>
+    <p class="subtitle">25-day production-grade SQL journey · Multi-vendor platform project · PostgreSQL 16</p>
+  </header>
+
+  <!-- CURRENT DAY BANNER -->
+  <div class="current-banner" id="currentBanner">
+    <div class="current-icon">🚀</div>
+    <div>
+      <div class="current-label">Currently on</div>
+      <div class="current-day-title" id="currentDayTitle">Day 1 — PostgreSQL Setup & Data Types</div>
+    </div>
+    <div class="current-phase-tag" id="currentPhaseTag">Phase 1 / Foundations</div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Overall Progress</div>
+      <div class="stat-value green" id="statPct">0%</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Days Completed</div>
+      <div class="stat-value blue" id="statDone">0 / 25</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Current Phase</div>
+      <div class="stat-value amber" id="statPhase">Phase 1</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Days Remaining</div>
+      <div class="stat-value purple" id="statLeft">25</div>
+    </div>
+  </div>
+
+  <!-- MASTER PROGRESS -->
+  <div class="master-progress">
+    <div class="mp-header">
+      <span class="mp-title">// OVERALL COMPLETION</span>
+      <span class="mp-pct" id="mpPct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="masterFill"></div></div>
+    <div class="phase-bars">
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label"><span>Phase 1 — Basics</span><span id="p1pct">0%</span></div>
+        <div class="mini-track"><div class="mini-fill p1" id="p1fill"></div></div>
+      </div>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label"><span>Phase 2 — Moderate</span><span id="p2pct">0%</span></div>
+        <div class="mini-track"><div class="mini-fill p2" id="p2fill"></div></div>
+      </div>
+      <div class="mini-bar-wrap">
+        <div class="mini-bar-label"><span>Phase 3 — Advanced</span><span id="p3pct">0%</span></div>
+        <div class="mini-track"><div class="mini-fill p3" id="p3fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-section">
+    <div class="phase-header" data-phase="1" onclick="togglePhase(this)">
+      <span class="phase-badge p1-badge">PHASE 01</span>
+      <span class="phase-title">Foundations — Single-Table Mastery</span>
+      <span class="phase-meta" id="p1meta">0 / 7 days</span>
+      <span class="phase-toggle">▾</span>
+    </div>
+    <div class="days-grid" id="grid-1">
+      <div class="day-row" onclick="toggleDay(this)" data-day="1" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 01</div>
+          <div class="day-title">PostgreSQL Setup & Data Types</div>
+          <div class="day-topic">CREATE TABLE, DROP, data type taxonomy · Bootstrap users, products, orders</div>
+        </div>
+        <span class="day-tag tag-ddl">DDL</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="2" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 02</div>
+          <div class="day-title">INSERT, SELECT & Filtering</div>
+          <div class="day-topic">WHERE, AND/OR/NOT · Populate raw transactional data with edge cases</div>
+        </div>
+        <span class="day-tag tag-dml">DML</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="3" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 03</div>
+          <div class="day-title">Sorting, LIMIT & DISTINCT</div>
+          <div class="day-topic">ORDER BY, OFFSET, DISTINCT · First audit: top orders, unique buyers</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="4" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 04</div>
+          <div class="day-title">String, Numeric & Date Functions</div>
+          <div class="day-topic">CONCAT, TRIM, ROUND, DATE_TRUNC · Clean and enrich product/user data</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="5" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 05</div>
+          <div class="day-title">NULL Handling</div>
+          <div class="day-topic">IS NULL, COALESCE, NULLIF · Detect missing addresses, incomplete profiles</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="6" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 06</div>
+          <div class="day-title">Aggregate Functions</div>
+          <div class="day-topic">COUNT, SUM, AVG, MIN, MAX · First revenue summary report</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="7" data-phase="1">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 07</div>
+          <div class="day-title">Phase 1 Capstone — EDA Audit</div>
+          <div class="day-topic">Full single-table order pipeline audit · Phase 1 sign-off</div>
+        </div>
+        <span class="day-tag tag-cap">CAPSTONE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-section">
+    <div class="phase-header" data-phase="2" onclick="togglePhase(this)">
+      <span class="phase-badge p2-badge">PHASE 02</span>
+      <span class="phase-title">Moderate Analytics — Multi-Table Intelligence</span>
+      <span class="phase-meta" id="p2meta">0 / 9 days</span>
+      <span class="phase-toggle">▾</span>
+    </div>
+    <div class="days-grid" id="grid-2">
+      <div class="day-row" onclick="toggleDay(this)" data-day="8" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 08</div>
+          <div class="day-title">GROUP BY & HAVING</div>
+          <div class="day-topic">Revenue by category · High-value customer segmentation</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="9" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 09</div>
+          <div class="day-title">INNER JOIN & LEFT JOIN</div>
+          <div class="day-topic">Link orders ↔ users ↔ products · Nullable join patterns</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="10" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 10</div>
+          <div class="day-title">RIGHT / FULL / SELF / CROSS JOIN</div>
+          <div class="day-topic">Orphaned records · Product-pair cross-sell analysis</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="11" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 11</div>
+          <div class="day-title">Subqueries</div>
+          <div class="day-topic">Scalar, correlated, EXISTS · Users who never ordered, above-avg spenders</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="12" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 12</div>
+          <div class="day-title">CTEs — WITH & Recursive</div>
+          <div class="day-topic">User retention funnel · Category roll-ups · Recursive hierarchies</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="13" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 13</div>
+          <div class="day-title">Schema Design & Normalization</div>
+          <div class="day-topic">1NF / 2NF / 3NF · Add sellers, reviews, payments, inventory tables</div>
+        </div>
+        <span class="day-tag tag-design">DESIGN</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="14" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 14</div>
+          <div class="day-title">CASE Expressions & Conditional Logic</div>
+          <div class="day-topic">Order status classification · Tiered discount bucketing</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="15" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 15</div>
+          <div class="day-title">UNION, INTERSECT & EXCEPT</div>
+          <div class="day-topic">Cross-platform user activity merges · Set algebra in BI pipelines</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="16" data-phase="2">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 16</div>
+          <div class="day-title">Phase 2 Capstone — Business Metrics</div>
+          <div class="day-topic">GMV, AOV, seller scorecard, churn signal · Phase 2 sign-off</div>
+        </div>
+        <span class="day-tag tag-cap">CAPSTONE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-section">
+    <div class="phase-header" data-phase="3" onclick="togglePhase(this)">
+      <span class="phase-badge p3-badge">PHASE 03</span>
+      <span class="phase-title">Advanced Engineering — Scale & Optimization</span>
+      <span class="phase-meta" id="p3meta">0 / 9 days</span>
+      <span class="phase-toggle">▾</span>
+    </div>
+    <div class="days-grid" id="grid-3">
+      <div class="day-row" onclick="toggleDay(this)" data-day="17" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 17</div>
+          <div class="day-title">Window Functions — Ranking</div>
+          <div class="day-topic">ROW_NUMBER, RANK, DENSE_RANK · Top-N products per seller per month</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="18" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 18</div>
+          <div class="day-title">Window Functions — Navigation</div>
+          <div class="day-topic">LAG, LEAD, FIRST_VALUE · MoM revenue delta, first-purchase attribution</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="19" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 19</div>
+          <div class="day-title">Window Functions — Distribution</div>
+          <div class="day-topic">NTILE, cumulative SUM/AVG · Spending percentiles, running totals</div>
+        </div>
+        <span class="day-tag tag-query">QUERY</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="20" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 20</div>
+          <div class="day-title">Indexing Strategy</div>
+          <div class="day-topic">B-Tree, Hash, Partial, Composite · Index the order pipeline for scale</div>
+        </div>
+        <span class="day-tag tag-perf">PERF</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="21" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 21</div>
+          <div class="day-title">Query Optimization</div>
+          <div class="day-topic">EXPLAIN ANALYZE, cost modeling · Diagnose & fix 5 slow production queries</div>
+        </div>
+        <span class="day-tag tag-perf">PERF</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="22" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 22</div>
+          <div class="day-title">Stored Procedures & Functions</div>
+          <div class="day-topic">PL/pgSQL · Automate invoice calculation, seller payout logic</div>
+        </div>
+        <span class="day-tag tag-design">DESIGN</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="23" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 23</div>
+          <div class="day-title">Triggers</div>
+          <div class="day-topic">AFTER INSERT / UPDATE · Auto-update inventory on order events</div>
+        </div>
+        <span class="day-tag tag-design">DESIGN</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="24" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 24</div>
+          <div class="day-title">Transactions & Concurrency</div>
+          <div class="day-topic">ACID, isolation levels, deadlocks · Concurrent checkout race conditions</div>
+        </div>
+        <span class="day-tag tag-perf">PERF</span>
+      </div>
+      <div class="day-row" onclick="toggleDay(this)" data-day="25" data-phase="3">
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="day-info">
+          <div class="day-number">DAY 25</div>
+          <div class="day-title">Final Capstone — Analytical Pipeline</div>
+          <div class="day-topic">End-to-end BI query set · Full platform analytics · Course completion 🏆</div>
+        </div>
+        <span class="day-tag tag-cap">CAPSTONE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-sig">
+      <span class="git-tag">git</span>
+      <span>ecommerce-sql-mastery</span>
+    </div>
+    <span id="footerDate"></span>
+  </footer>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'sql_roadmap_v1';
+
+  const PHASE_DAYS = { 1: 7, 2: 9, 3: 9 };
+  const PHASE_NAMES = {
+    1: 'Phase 1 / Foundations',
+    2: 'Phase 2 / Moderate',
+    3: 'Phase 3 / Advanced'
+  };
+
+  const DAY_TITLES = {
+    1: 'Day 1 — PostgreSQL Setup & Data Types',
+    2: 'Day 2 — INSERT, SELECT & Filtering',
+    3: 'Day 3 — Sorting, LIMIT & DISTINCT',
+    4: 'Day 4 — String, Numeric & Date Functions',
+    5: 'Day 5 — NULL Handling',
+    6: 'Day 6 — Aggregate Functions',
+    7: 'Day 7 — Phase 1 Capstone',
+    8: 'Day 8 — GROUP BY & HAVING',
+    9: 'Day 9 — INNER JOIN & LEFT JOIN',
+    10: 'Day 10 — RIGHT / FULL / SELF / CROSS JOIN',
+    11: 'Day 11 — Subqueries',
+    12: 'Day 12 — CTEs',
+    13: 'Day 13 — Schema Design & Normalization',
+    14: 'Day 14 — CASE Expressions',
+    15: 'Day 15 — UNION, INTERSECT & EXCEPT',
+    16: 'Day 16 — Phase 2 Capstone',
+    17: 'Day 17 — Window Functions: Ranking',
+    18: 'Day 18 — Window Functions: Navigation',
+    19: 'Day 19 — Window Functions: Distribution',
+    20: 'Day 20 — Indexing Strategy',
+    21: 'Day 21 — Query Optimization',
+    22: 'Day 22 — Stored Procedures & Functions',
+    23: 'Day 23 — Triggers',
+    24: 'Day 24 — Transactions & Concurrency',
+    25: 'Day 25 — Final Capstone 🏆'
+  };
+
+  let completed = new Set();
+
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed])); }
+  function load() {
+    try { const s = localStorage.getItem(STORAGE_KEY); if (s) completed = new Set(JSON.parse(s)); }
+    catch(e) {}
+  }
+
+  function toggleDay(row) {
+    const day = parseInt(row.dataset.day);
+    if (completed.has(day)) completed.delete(day);
+    else completed.add(day);
+    save();
+    render();
+  }
+
+  function togglePhase(header) {
+    const phase = header.dataset.phase;
+    const grid = document.getElementById('grid-' + phase);
+    const collapsed = header.classList.toggle('collapsed');
+    grid.classList.toggle('hidden', collapsed);
+  }
+
+  function render() {
+    const rows = document.querySelectorAll('.day-row');
+    rows.forEach(row => {
+      const day = parseInt(row.dataset.day);
+      row.classList.toggle('done', completed.has(day));
+    });
+
+    const total = 25;
+    const done = completed.size;
+    const pct = Math.round((done / total) * 100);
+
+    document.getElementById('masterFill').style.width = pct + '%';
+    document.getElementById('mpPct').textContent = pct + '%';
+    document.getElementById('statPct').textContent = pct + '%';
+    document.getElementById('statDone').textContent = done + ' / ' + total;
+    document.getElementById('statLeft').textContent = (total - done);
+
+    [1, 2, 3].forEach(p => {
+      const pDays = PHASE_DAYS[p];
+      const start = p === 1 ? 1 : p === 2 ? 8 : 17;
+      let pDone = 0;
+      for (let d = start; d < start + pDays; d++) if (completed.has(d)) pDone++;
+      const pp = Math.round((pDone / pDays) * 100);
+      document.getElementById('p' + p + 'fill').style.width = pp + '%';
+      document.getElementById('p' + p + 'pct').textContent = pp + '%';
+      document.getElementById('p' + p + 'meta').textContent = pDone + ' / ' + pDays + ' days';
+    });
+
+    let currentPhase = 1;
+    if ([...completed].some(d => d >= 17)) currentPhase = 3;
+    else if ([...completed].some(d => d >= 8)) currentPhase = 2;
+    document.getElementById('statPhase').textContent = 'Phase ' + currentPhase;
+
+    const nextDay = Math.min(
+      [...Array(25)].map((_,i)=>i+1).find(d => !completed.has(d)) || 25,
+      25
+    );
+    document.getElementById('currentDayTitle').textContent = DAY_TITLES[nextDay] || 'All Days Complete 🏆';
+
+    let cp = 1;
+    if (nextDay >= 17) cp = 3;
+    else if (nextDay >= 8) cp = 2;
+    document.getElementById('currentPhaseTag').textContent = PHASE_NAMES[cp];
+  }
+
+  document.getElementById('footerDate').textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  load();
+  render();
+</script>
+</body>
+</html>
