@@ -182,6 +182,10 @@ FROM users
 WHERE phone LIKE '+91%';
 
 
+SELECT COUNT(*) FROM users;    -- should be 10
+SELECT COUNT(*) FROM products; -- should be 10
+SELECT COUNT(*) FROM orders;   -- should be 15
+
 
 
 
