@@ -81,3 +81,78 @@ WHERE phone IS NOT NULL
 > 💡 **Golden Rule:** Never use `= NULL`. Always use `IS NULL` or `IS NOT NULL`.
 
 ---
+
+## Day 04 — Revision Q&A
+
+**Q1. What is the difference between `CONCAT()` and `||`
+when one value is NULL?**
+
+- `CONCAT()` treats `NULL` as an empty string `''` — result is
+  still returned even if some values are NULL
+- `||` operator — if ANY part of the expression is NULL,
+  the **entire result becomes NULL**
+
+```sql
+-- User with NULL last_name (Fatima):
+CONCAT('Fatima', ' ', NULL)     → 'Fatima '   ✅ safe
+'Fatima' || ' ' || NULL         → NULL         ❌ poisoned
+
+-- Best practice: use CONCAT() when any column might be NULL
+-- Or use COALESCE to handle NULLs explicitly:
+CONCAT(first_name, ' ', COALESCE(last_name, ''))
+```
+
+---
+
+**Q2. What does `DATE_TRUNC('month', ordered_at)` return
+for `'2024-12-15 14:30:00'`?**
+
+It returns the **timestamp of the very first moment of that month**:
+
+```sql
+DATE_TRUNC('month', '2024-12-15 14:30:00')
+→ '2024-12-01 00:00:00+00'
+```
+
+It does NOT return just "December" or "12".
+It truncates everything below month level (day, hour, minute, second)
+to their minimum values — giving the start of the month.
+
+This is why it is powerful for analytics — all orders placed in
+December 2024 get grouped under the same `'2024-12-01 00:00:00'`
+value regardless of what day or time they were placed.
+
+---
+
+**Q3. When would you use `CEIL()` over `ROUND()`
+in a real business scenario?**
+
+Use `CEIL()` when you must **always round UP** regardless of the
+decimal value — business logic requires it.
+
+Use `ROUND()` when you want standard mathematical rounding
+(≥ 0.5 rounds up, < 0.5 rounds down).
+
+```sql
+-- Scenario: Shipping weight billing
+-- Never undercharge — always bill the full kg above
+
+weight_kg = 2.1
+
+ROUND(2.1, 0)  → 2   ❌ undercharges customer
+CEIL(2.1)      → 3   ✅ correct billing
+
+-- Other CEIL() use cases:
+-- Pages needed to print N records (CEIL(records / page_size))
+-- Minimum number of boxes to pack N items
+-- Minimum number of buses for N passengers
+
+-- ROUND() use cases:
+-- GST amount display → ROUND(price * 0.18, 2)
+-- Average order value → ROUND(AVG(total_amount), 2)
+-- Discount percentage → ROUND(discount * 100.0 / price, 1)
+```
+
+> 💡 **Rule of thumb:**
+> `CEIL()` = business says "never go below"
+> `ROUND()` = mathematics says "nearest value"
