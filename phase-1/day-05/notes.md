@@ -118,10 +118,10 @@ CASE WHEN total_amount IS NOT NULL
 
 ### COALESCE vs NULLIF — Quick Distinction
 
-a. COALESCE → "give me the first non-NULL value"
-b. Use for: fallback display, safe arithmetic
-c. NULLIF → "give me NULL if these two values are equal"
-d. Use for: prevent division by zero,
+1. COALESCE → "give me the first non-NULL value"
+2. Use for: fallback display, safe arithmetic
+3. NULLIF → "give me NULL if these two values are equal"
+4. Use for: prevent division by zero,
 treat empty string as NULL
 
 ### CASE — the SQL if/else
